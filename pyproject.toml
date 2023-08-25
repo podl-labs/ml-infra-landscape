@@ -7,7 +7,10 @@ readme = "README.md"
 packages = [{include = "ml_platforms_comparison"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "3.10.13"
+tensorflow = "^2.13.0"
+transformers = "^4.32.0"
+mypy = "^1.5.1"
 
 
 [build-system]
