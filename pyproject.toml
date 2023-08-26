@@ -12,6 +12,7 @@ tensorflow = "^2.13.0"
 transformers = "^4.32.0"
 mypy = "^1.5.1"
 modal-client = "^0.51.3192"
+beam-sdk = "^0.14.12"
 
 
 [build-system]

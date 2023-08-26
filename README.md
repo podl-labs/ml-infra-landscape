@@ -94,10 +94,56 @@ sys     0m0.142s
 
 ## 2. Beam.cloud
 
-Next, I have beam.cloud a spin.
+Next, I gave beam.cloud a try. First impression- Modal's blue twin. Notice how the API resembles Modal. They even provide identical functionality for cron jobs and REST APIs.
+
 ```sh
+from beam import App, Runtime, Image
+from transformers import pipeline
+
+app = App(
+    name="text-classification",
+    runtime=Runtime(
+        image=Image(
+            python_version="python3.10",
+            python_packages=["transformers", "tensorflow"],
+        ),
+    ),
+)
+
+
+def get_sentiment(text: str):
+    model = pipeline("text-classification")
+    return model(text)
+
+
+@app.run()
+def main():
+    res = get_sentiment("good job")
+    print(res)
 
 ```
+
+
+Try out the code with
+
+```sh
+# Create a run.cloud account. Follow their instructions to setup run.cloud CLI on your system.
+
+# Run code
+cd beam
+beam run main.py:main
+```
+
+### Pros
+
+1. All the features discussed for Modal- infra as code, free credits, etc.
+2. Good quality examples
+3. This is subjective but I find the CLI easier to use. I can define a bunch of functions and call the one I need with `beam run main.py:main` or `beam run main.py:get_sentiment`
+
+### Cons
+
+1. Supports horizontal scaling of APIs but there's no equivalent to `get_sentiment.map()`.
+2. Pricing is slightly higher than Modal.
 
 ## Local environment setup
 
