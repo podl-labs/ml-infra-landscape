@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "ml-platforms-comparison"
+version = "0.1.0"
+description = ""
+authors = ["secretshardul <aeershardul@gmail.com>"]
+readme = "README.md"
+packages = [{include = "ml_platforms_comparison"}]
+
+[tool.poetry.dependencies]
+python = "3.10.13"
+tensorflow = "^2.13.0"
+transformers = "^4.32.0"
+mypy = "^1.5.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

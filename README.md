@@ -20,6 +20,7 @@ if __name__ == "__main__":
 Run code locally using
 
 ```sh
+cd local
 poetry shell
 python local/main.py
 ```
@@ -27,7 +28,9 @@ python local/main.py
 ## 1. Modal
 
 ```sh
-modal run modal/main.py
+cd modal
+poetry shell
+modal run main.py
 ```
 
 ### Pros
@@ -115,7 +118,6 @@ def get_sentiment(text: str):
     model = pipeline("text-classification")
     return model(text)
 
-
 @app.run()
 def main():
     res = get_sentiment("good job")
@@ -127,10 +129,11 @@ def main():
 Try out the code with
 
 ```sh
-# Create a run.cloud account. Follow their instructions to setup run.cloud CLI on your system.
+# Create a run.cloud account. Follow their instructions to setup beam.cloud CLI on your system.
 
 # Run code
 cd beam
+poetry shell
 beam run main.py:main
 ```
 
