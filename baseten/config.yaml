@@ -1,0 +1,15 @@
+environment_variables: {}
+external_package_dirs: []
+model_metadata: {}
+model_name: text-classification
+python_version: py311
+requirements:
+  - transformers==4.32.0
+  - tensorflow==2.13.0
+resources:
+  accelerator: null
+  cpu: '1'
+  memory: 2Gi
+  use_gpu: false
+secrets: {}
+system_packages: []
