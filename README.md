@@ -244,75 +244,49 @@ if __name__ == "__main__":
 1. **Single purpose**: Baseten is a backend tool. It has no functionality such as REST APIs for clients. Instead you must call baseten from a secure server which is responsible for the frontend. On the flip side this means baseten is good if you intend to integrate with your existing server stack. You can also use your models with their application builder.
 2. **Closed beta**: Your account must be whitelisted in order to use baseten.
 
-## Local environment setup
+## 4. Replicate
 
-1. Setup keyring, install CUDA. Ref- https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_network
+Replicate is another tool to take the pain out of running AI infrastructure. Like Baseten, they have an open source tool called [cog](https://github.com/replicate/cog) to manage containers.
+
+The code becomes like this. This is very similar to BaseTen.
+
+```py
+from cog import BasePredictor, Input, Path
+from transformers import pipeline
+
+class Predictor(BasePredictor):
+    def setup(self):
+        self.model = pipeline("text-classification")
+
+    def predict(self,
+          model_input: str
+    ):
+        return self.model(model_input)
+```
 
 ```sh
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
-sudo dpkg -i cuda-keyring_1.1-1_all.deb
+cd replicate
+poetry shell
 
-sudo apt-get update
-sudo apt-get -y install cuda-11-8 # just cuda will install v12 which isn't well supported
+# Install Cog
+sudo curl -o /usr/local/bin/cog -L https://github.com/replicate/cog/releases/latest/download/cog_`uname -s`_`uname -m`
+sudo chmod +x /usr/local/bin/cog
+
+# Run locally
+cog predict -i model_input=good
+
+# Push image
+
 ```
 
-2. Setup env vars in ~/.bashrc
+### Pros
 
-```bashrc
-export PATH=/usr/local/cuda-12.2/bin${PATH:+:${PATH}}
-export LD_LIBRARY_PATH=/usr/local/cuda-12.2/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
-```
+1. **Maturity**: `cog` is a more mature platform with 5.5k Github stars.
+2. **Clients available in multiple languages**: Replicate provides clients to call models in Javascript, Swift and Elixir
+3. **Github actions integration**: Replicate provides [Github actions](https://github.com/replicate/setup-cog) to continually build models as new code is pushed.
+4. **Public models**: Models can be published publicly or privately. Public models can be called by anybody with a valid API key, they don't need to deploy it under their own namespeace.
 
-3. Reboot
+### Cons
 
-4. Run `nvcc --version`
-
-5. Install cudnn
-
-```sh
-sudo apt install -y libcudnn8 libcudnn8-dev libcudnn8-samples
-```
-
-
-Remove everything
-
-
-```sh
-# Remove CUDA and Nvidia
-sudo apt remove nvidia-driver-525  nvidia-dkms-525
-sudo apt-get purge nvidia*
-sudo apt-get autoremove
-sudo apt-get autoclean
-sudo rm -rf /usr/local/cuda*
-
-sudo dpkg -r cuda-repo-ubuntu2204-11-8-local
-sudo dpkg --purge cuda-repo-ubuntu2204-11-8-local
-
-sudo dpkg -r --force-all cuda-repo-ubuntu2204-12-2-local
-sudo dpkg --purge cuda-repo-ubuntu2204-12-2-local
-
-# Remove old CUDA
-sudo apt remove cuda libcudnn8 libcudnn8-dev libcudnn8-samples nvidia-cuda-toolkit
-sudo apt-get --purge remove "*cublas*" "cuda*"
-sudo rm -rf /usr/local/cuda*
-
-# Remove keyring
-sudo dpkg -r cuda-keyring
-sudo dpkg --purge cuda-keyring
-```
-
-## Python version management
-
-```sh
-# Install pyenv
-curl https://pyenv.run | bash
-
-# Install version
-pyenv install 3.10
-
-pyenv global 3.10
-
-pyenv local 3.10
-
-poetry env use 3.10
-```
+1. Pushing an image with `cog push r8.im` builds the docker image locally. This is slower than Baseten which builds on the cloud.
+2. Undocumented free tier: "You can use Replicate for free, but after a bit you'll be asked to enter your credit card"

@@ -1,0 +1,10 @@
+build:
+  gpu: true
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+  python_version: "3.11"
+  python_packages:
+    - transformers==4.32.0
+    - tensorflow==2.13.0
+predict: "predict.py:Predictor"
