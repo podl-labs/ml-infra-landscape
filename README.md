@@ -37,29 +37,29 @@ modal run main.py
 
 1. **Annotations**: By updating a few lines of code, I was able to turn our python program into a Modal app.
 
-  ```py
-  # This function can now be called in the cloud using get_sentiment.remote("gg")
-  @stub.function()
-  def get_sentiment(text: str):
+```py
+# This function can now be called in the cloud using get_sentiment.remote("gg")
+@stub.function()
+def get_sentiment(text: str):
 
-  # Turns the function into a REST API
-  @web_endpoint()
-  def foo():
-  ```
+# Turns the function into a REST API
+@web_endpoint()
+def foo():
+```
 
 2. **Infrastructure as code**: Python dependencies are finnicky. I had spent a day trying to downgrade to CUDA 11 on my computer to run tensorflow. The usual way for deterministic builds across different computers is to package your app as a docker image. Docker guarantees determinism by running the app inside a Linux container, howerver this adds a lot of overhead. First you must create the docker image, and running it locally is slower. Fortunately with Modal I could simply define my dependencies in Python. The app runs on the cloud so it runs much faster.
 
-  ```py
-  stub = modal.Stub("text-classification")
-  transformers_image = modal.Image.debian_slim().pip_install("transformers", "tensorflow")
-  ```
+```py
+stub = modal.Stub("text-classification")
+transformers_image = modal.Image.debian_slim().pip_install("transformers", "tensorflow")
+```
 
 3. **Horizontal scalability**: Arguably the most useful feature. We can scale out horizontally in a non-blocking manner and gather the results using `map()`.
 
-  ```py
-  get_sentiment.local("gg") # Run locally
-  get_sentiment.remote("gg") # Run remote
-  ```
+```py
+get_sentiment.local("gg") # Run locally
+get_sentiment.remote("gg") # Run remote
+```
 
 4. **Cron and REST API support**: We can write full stack applications and tasks within modal, without leaving Python. Modal calls this cloud 2.0- AWS like features with superior developer experience.
 
@@ -150,7 +150,7 @@ beam run main.py:main
 
 ## 3. Baseten
 
-Unlike the others [Baseten](https://baseten.co) intends on doing one thing right, "machine learning infra that just works". No cron jobs or annotations, Baseten focuses on quickly getting containers up. They've built an open source tool [truss]() to quickly package and deploy models. Our code becomes like this
+Unlike the others [Baseten](https://baseten.co) intends on doing one thing right, "machine learning infra that just works". No cron jobs or annotations, Baseten focuses on quickly getting containers up. They've built an open source tool [truss](https://github.com/basetenlabs/truss) to quickly package and deploy models. Our code becomes like this
 
 ```py
 from transformers import pipeline
@@ -276,7 +276,7 @@ sudo chmod +x /usr/local/bin/cog
 cog predict -i model_input=good
 
 # Push image
-
+cog push r8.im/<your-username>/<your-model-name>
 ```
 
 ### Pros
